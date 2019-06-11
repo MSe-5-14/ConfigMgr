@@ -123,10 +123,10 @@ Process {
 
     # Attempt to detect HPFirmwareUpdRec utility file name
 	if (([Environment]::Is64BitOperatingSystem) -eq $true) {
-		$HPFlashUtil = Get-ChildItem -Path $Path -Filter "*.exe" -Recurse | Where-Object { $_.Name -like "HPQFlash.exe" } | Select-Object -ExpandProperty FullName
+		$HPFlashUtil = Get-ChildItem -Path $Path -Filter "*.exe" -Recurse | Where-Object { $_.Name -like "HPQFlash64.exe" } | Select-Object -ExpandProperty FullName
 	}
 	else {
-		$HPFlashUtil = Get-ChildItem -Path $Path -Filter "*.exe" -Recurse | Where-Object { $_.Name -like "HPQFlash64.exe" } | Select-Object -ExpandProperty FullName	
+		$HPFlashUtil = Get-ChildItem -Path $Path -Filter "*.exe" -Recurse | Where-Object { $_.Name -like "HPQFlash.exe" } | Select-Object -ExpandProperty FullName	
 	}
 
 	if ($HPBIOSUPDUtil -ne $null) {	
@@ -147,7 +147,7 @@ Process {
 
 	if ($HPFlashUtil -ne $null) {	
 		# Set required switches for silent upgrade of the bios and logging
-		Write-CMLogEntry -Value "Using HPFirmwareUpdRec BIOS update method" -Severity 1
+		Write-CMLogEntry -Value "Using HPQFlash BIOS update method" -Severity 1
 		# This -r switch appears to be undocumented, which is a shame really, but this prevents the reboot without exit code. The command now returns a correct exit code and lets ConfigMgr reboot the computer gracefully.
 		$FlashSwitches = " -s -r"
 		$FlashUtility = $HPFlashUtil
@@ -159,7 +159,7 @@ Process {
 	
 	if (-not([System.String]::IsNullOrEmpty($PasswordBin))) {
 		# Add password to the flash bios switches
-		$FlashSwitches = $FlashSwitches + " -p$($Path)\$($PasswordBin)"	
+		$FlashSwitches = $FlashSwitches + " -p$($PSScriptRoot)\$($PasswordBin)"	
 		Write-CMLogEntry -Value "Using the following switches for BIOS file: $($FlashSwitches)" -Severity 1
 	}
 	else {
